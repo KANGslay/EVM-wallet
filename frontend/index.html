@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EVM托管钱包系统</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">EVM托管钱包</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" data-page="welcome">首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-page="dashboard">我的钱包</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-page="send">转账</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-page="transactions">交易记录</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-page="ai-chat">AI助手</a>
+                    </li>
+                </ul>
+                <div id="auth-buttons" class="d-flex">
+                    <button class="btn btn-outline-light me-2" data-page="auth" data-bs-toggle="modal" data-bs-target="#auth-modal">登录/注册</button>
+                </div>
+                <div id="user-info" class="d-flex d-none">
+                    <span class="navbar-text me-3">欢迎，<span id="username-display"></span></span>
+                    <button id="logout-btn" class="btn btn-outline-light">退出</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主内容区 -->
+    <div class="container mt-4">
+        <!-- 欢迎页面 -->
+        <div id="welcome-page" class="page">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h2 class="card-title">EVM托管钱包系统</h2>
+                            <p class="card-text">安全、便捷的以太坊钱包托管解决方案</p>
+                            <ul class="list-group list-group-flush mb-3">
+                                <li class="list-group-item">✅ 安全存储私钥</li>
+                                <li class="list-group-item">✅ ETH和ERC20代币转账</li>
+                                <li class="list-group-item">✅ AI对话控制钱包</li>
+                                <li class="list-group-item">✅ 交易记录查询</li>
+                            </ul>
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#auth-modal">开始使用</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3132/3132693.png" alt="钱包插图" class="img-fluid" style="max-height: 300px;">
+                </div>
+            </div>
+        </div>
+
+        <!-- 仪表盘页面 -->
+        <div id="dashboard-page" class="page d-none">
+            <h2>我的钱包</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-header">钱包信息</div>
+                        <div class="card-body">
+                            <div id="wallet-info">
+                                <p>加载中...</p>
+                            </div>
+                            <div id="wallet-alert"></div>
+                            <div id="create-wallet-section" class="d-none">
+                                <button id="create-wallet-btn" class="btn btn-primary">创建钱包</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-header">资产概览</div>
+                        <div class="card-body">
+                            <div id="assets-overview">
+                                <p>加载中...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-header">资产列表</div>
+                        <div class="card-body">
+                            <div id="assets-list">
+                                <p>加载中...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-header">导入代币</div>
+                        <div class="card-body">
+                            <form id="import-token-form">
+                                <div class="mb-3">
+                                    <label for="token-address" class="form-label">代币合约地址</label>
+                                    <input type="text" class="form-control" id="token-address" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="token-symbol" class="form-label">代币符号</label>
+                                    <input type="text" class="form-control" id="token-symbol" required>
+                                </div>
+                                <div id="import-token-alert"></div>
+                                <button type="submit" id="import-token-btn" class="btn btn-primary">导入</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 转账页面 -->
+        <div id="send-page" class="page d-none">
+            <h2>发送资产</h2>
+            <div class="card">
+                <div class="card-body">
+                    <form id="send-form">
+                        <div class="mb-3">
+                            <label for="to-address" class="form-label">接收地址</label>
+                            <input type="text" class="form-control" id="to-address" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="asset-select" class="form-label">选择资产</label>
+                            <select class="form-select" id="asset-select" required>
+                                <option value="">请选择资产</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="amount" class="form-label">金额</label>
+                            <input type="number" class="form-control" id="amount" step="0.000001" min="0" required>
+                        </div>
+                        <div id="send-alert"></div>
+                        <button type="submit" id="send-btn" class="btn btn-primary">发送</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- 交易记录页面 -->
+        <div id="transactions-page" class="page d-none">
+            <h2>交易记录</h2>
+            <div class="card">
+                <div class="card-body">
+                    <div id="transactions-list">
+                        <p>加载中...</p>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <div>
+                            <span id="pagination-info">第 1 页，共 1 页，总计 0 条记录</span>
+                        </div>
+                        <div>
+                            <select id="page-size" class="form-select form-select-sm d-inline-block me-2" style="width: auto;">
+                                <option value="10">10条/页</option>
+                                <option value="20">20条/页</option>
+                                <option value="50">50条/页</option>
+                            </select>
+                            <button id="prev-page" class="btn btn-sm btn-outline-primary me-1">上一页</button>
+                            <button id="next-page" class="btn btn-sm btn-outline-primary">下一页</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI聊天页面 -->
+        <div id="ai-chat-page" class="page d-none">
+            <h2>AI钱包助手</h2>
+            <div class="card">
+                <div class="card-body">
+                    <div id="chat-messages" class="chat-container mb-3">
+                        <div class="chat-message ai-message">
+                            <div class="message-content">
+                                您好！我是您的AI钱包助手。您可以通过对话来查询余额、发送资产或了解钱包信息。有什么可以帮您的吗？
+                            </div>
+                        </div>
+                    </div>
+                    <form id="chat-form" class="d-flex">
+                        <input type="text" id="chat-message" class="form-control me-2" placeholder="输入您的问题或指令..." required>
+                        <button type="submit" class="btn btn-primary">发送</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 登录/注册模态框 -->
+    <div class="modal fade" id="auth-modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">登录/注册</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-tabs" id="auth-tabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login-tab-pane" type="button" role="tab">登录</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="register-tab" data-bs-toggle="tab" data-bs-target="#register-tab-pane" type="button" role="tab">注册</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content mt-3" id="auth-tabs-content">
+                        <div class="tab-pane fade show active" id="login-tab-pane" role="tabpanel" tabindex="0">
+                            <form id="login-form">
+                                <div class="mb-3">
+                                    <label for="login-username" class="form-label">用户名</label>
+                                    <input type="text" class="form-control" id="login-username" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="login-password" class="form-label">密码</label>
+                                    <input type="password" class="form-control" id="login-password" required>
+                                </div>
+                                <div id="login-alert"></div>
+                                <button type="submit" class="btn btn-primary w-100">登录</button>
+                            </form>
+                        </div>
+                        <div class="tab-pane fade" id="register-tab-pane" role="tabpanel" tabindex="0">
+                            <form id="register-form">
+                                <div class="mb-3">
+                                    <label for="register-username" class="form-label">用户名</label>
+                                    <input type="text" class="form-control" id="register-username" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="register-email" class="form-label">电子邮箱</label>
+                                    <input type="email" class="form-control" id="register-email" required>
+                                </div
+                                <div class="mb-3">
+                                    <label for="register-password" class="form-label">密码</label>
+                                    <input type="password" class="form-control" id="register-password" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="register-confirm-password" class="form-label">确认密码</label>
+                                    <input type="password" class="form-control" id="register-confirm-password" required>
+                                </div>
+                                <div id="register-alert"></div>
+                                <button type="submit" class="btn btn-primary w-100">注册</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 交易确认模态框 -->
+    <div class="modal fade" id="transaction-confirm-modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">确认交易</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>请确认以下交易信息：</p>
+                    <div class="mb-3">
+                        <strong>接收地址：</strong>
+                        <p id="confirm-to-address" class="text-break"></p>
+                    </div>
+                    <div class="mb-3">
+                        <strong>资产：</strong>
+                        <p id="confirm-asset"></p>
+                    </div>
+                    <div class="mb-3">
+                        <strong>金额：</strong>
+                        <p id="confirm-amount"></p>
+                    </div>
+                    <div class="alert alert-warning">
+                        <strong>警告：</strong> 交易提交后无法撤销，请仔细核对信息。
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" id="confirm-transaction-btn" class="btn btn-primary">确认发送</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript依赖 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+{
+  "name": "evm-wallet-mcp",
+  "version": "1.0.0",
+  "description": "EVM钱包MCP连接器，用于将本地EVM钱包系统通过MCP协议接入Cherry Studio",
+  "main": "index.js",
+  "bin": {
+    "evm-wallet-mcp": "./index.js"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "evm",
+    "wallet",
+    "mcp",
+    "cherry-studio",
+    "plugin",
+    "connector"
+  ],
+  "author": "root",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

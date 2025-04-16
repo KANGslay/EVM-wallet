@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "EVM_Wallet_MCP": {
+      "name": "EVM Wallet MCP",
+      "description": "连接本地 EVM 钱包系统",
+      "protocol": "stdio",
+      "baseUrl": "",
+      "command": "npx",
+      "args": ["evm-wallet-mcp"],
+      "cwd": "/Users/apple/Pyfile/evm_wallet",
+      "env": {},
+      "timeoutMs": 60000,
+      "isActive": true
+    }
+  }
+}

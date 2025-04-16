@@ -1,0 +1,16 @@
+[2025-04-12 22:06:14 +0800] [80404] [INFO] Starting gunicorn 23.0.0
+[2025-04-12 22:06:14 +0800] [80404] [INFO] Listening at: http://0.0.0.0:8081 (80404)
+[2025-04-12 22:06:14 +0800] [80404] [INFO] Using worker: uvicorn.workers.UvicornWorker
+[2025-04-12 22:06:14 +0800] [80408] [INFO] Booting worker with pid: 80408
+[2025-04-12 22:06:15 +0800] [80408] [INFO] Started server process [80408]
+[2025-04-12 22:06:15 +0800] [80408] [INFO] Waiting for application startup.
+[2025-04-12 22:06:15 +0800] [80408] [INFO] Application startup complete.
+2025-04-12 22:08:35,565 - app.api.auth - ERROR - 用户注册失败: 400: 用户名已存在
+2025-04-12 22:08:48,846 - app.api.auth - ERROR - 用户注册失败: (sqlite3.IntegrityError) UNIQUE constraint failed: users.email
+[SQL: INSERT INTO users (username, email, hashed_password, is_active, updated_at) VALUES (?, ?, ?, ?, ?) RETURNING id, created_at]
+[parameters: ('kangjianye01', '1043786779@qq.com', '$2b$12$siizzqt432ASUtXbG.MGvOFO8d7JOsMyFuR39Dtw4z7mlhAx3Dpem', 1, None)]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+/Users/apple/Pyfile/evm_wallet/app/ai/chains.py:101: LangChainDeprecationWarning: Please see the migration guide at: https://python.langchain.com/docs/versions/migrating_memory/
+  memory = ConversationBufferMemory(
+/Users/apple/Pyfile/evm_wallet/app/ai/chains.py:112: LangChainDeprecationWarning: The class `LLMChain` was deprecated in LangChain 0.1.17 and will be removed in 1.0. Use :meth:`~RunnableSequence, e.g., `prompt | llm`` instead.
+  conversation = LLMChain(
